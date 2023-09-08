@@ -1,9 +1,11 @@
-﻿namespace DevSquad.Api.Squads.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DevSquad.Api.Squads.Dtos
 {
     public record SquadDto
     (
         Guid Id,
-        string Name,
+        [Required] string Name,
         string DeveloperName
     );
 
