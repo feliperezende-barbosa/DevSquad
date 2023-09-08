@@ -1,4 +1,7 @@
 using DevSquad.Api.Squads.Dtos;
+using DevSquad.Api.Squads.Entity;
+using DevSquad.Api.Squads.Extension;
+using DevSquad.Api.Squads.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevSquad.Api.Squads.Data
@@ -7,68 +10,73 @@ namespace DevSquad.Api.Squads.Data
     [Route("api/[controller]")]
     public class SquadsController : ControllerBase
     {
-        private static readonly List<SquadDto> Squads = new()
-        {
-            new SquadDto(Guid.NewGuid(), "Squad 1", "Developer 1"),
-            new SquadDto(Guid.NewGuid(), "Squad 2", "Developer 2"),
-            new SquadDto(Guid.NewGuid(), "Squad 3", "Developer 3")
-        };
-            
+        private readonly SquadsRepository _repository;
+
+
         [HttpGet]
-        public IEnumerable<SquadDto> GetSquads()
+        public async Task<IEnumerable<SquadDto>> GetSquads()
         {
-            return Squads;
+            var squads = await _repository.GetSquadsAsync();
+            return squads.Select(squad => squad.AsDto());            
         }
 
         [HttpGet("{id}")]
-        public ActionResult<SquadDto> GetSquad(Guid id)
+        public async Task<ActionResult<SquadDto>> GetSquad(Guid id)
         {
-            var squad = Squads.FirstOrDefault(s => s.Id == id);
+            var squad = await _repository.GetSquadAsync(id);
+            
             if (squad == null)
             {
                 return NotFound();
             }
 
-            return squad;
+            return squad.AsDto();
         }
 
         [HttpPost]
-        public ActionResult<SquadDto> CreateSquad(SquadDto squad)
+        public async Task<ActionResult<SquadDto>> CreateSquad(SquadDto squad)
         {
-            Squads.Add(squad);
-            return CreatedAtAction(nameof(GetSquad), new {id = squad.Id}, squad);
+            var createdSquad = new SquadEntity
+            {
+                Description = squad.Description,
+                DeveloperName = squad.DeveloperName,
+                Name = squad.Name
+            };
+            
+            await _repository.CreateSquadAsync(createdSquad);
+            return CreatedAtAction(nameof(GetSquad), new {id = createdSquad.Id}, createdSquad);
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateSquad(Guid id, SquadDto squad)
-        {            
-            if (id != squad.Id)
-            {
-                return BadRequest();
-            }
+        public async Task<IActionResult> UpdateSquad(Guid id, SquadDto squad)
+        {   
+            var existingSquad = await _repository.GetSquadAsync(id);
 
-            var squadToUpdate = Squads.FirstOrDefault(s => s.Id == id);
-            if (squadToUpdate == null)
+            if (existingSquad == null)
             {
                 return NotFound();
             }
 
-            Squads.Remove(squadToUpdate);
-            Squads.Add(squad);
+            existingSquad.Description = squad.Description;
+            existingSquad.DeveloperName = squad.DeveloperName;
+            existingSquad.Name = squad.Name;
+
+            await _repository.UpdateSquadAsync(existingSquad);
 
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteSquad(Guid id)
+        public async Task<IActionResult> DeleteSquad(Guid id)
         {
-            var squad = Squads.FirstOrDefault(s => s.Id == id);
-            if (squad == null)
+            var existingSquad = await _repository.GetSquadAsync(id);
+
+            if (existingSquad == null)
             {
                 return NotFound();
             }
 
-            Squads.Remove(squad);
+            await _repository.DeleteSquadAsync(id);
 
             return NoContent();
         }

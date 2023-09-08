@@ -6,18 +6,21 @@ namespace DevSquad.Api.Squads.Dtos
     (
         Guid Id,
         [Required] string Name,
+        string Description,
         string DeveloperName
     );
 
     public record SquadCreateDto
     (
         string Name,
+        string Description,
         string DeveloperName
     );
 
     public record SquadUpdateDto
     (
         string Name,
+        string Description,
         string DeveloperName
     );
     
