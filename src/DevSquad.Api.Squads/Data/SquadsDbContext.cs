@@ -10,6 +10,5 @@ namespace DevSquad.Api.Squads.Data
         }
 
         public DbSet<Squad> Squads { get; set; }
-        public DbSet<Developer> Developers { get; set; }
     }
 }
