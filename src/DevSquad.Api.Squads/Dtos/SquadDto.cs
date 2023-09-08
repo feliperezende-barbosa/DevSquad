@@ -2,7 +2,19 @@
 {
     public record SquadDto
     (
-        int Id,
+        Guid Id,
+        string Name,
+        string DeveloperName
+    );
+
+    public record SquadCreateDto
+    (
+        string Name,
+        string DeveloperName
+    );
+
+    public record SquadUpdateDto
+    (
         string Name,
         string DeveloperName
     );
