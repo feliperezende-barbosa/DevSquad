@@ -10,8 +10,12 @@ namespace DevSquad.Api.Squads.Data
     [Route("api/[controller]")]
     public class SquadsController : ControllerBase
     {
-        private readonly SquadsRepository _repository;
+        private readonly ISquadsRepository _repository;
 
+        public SquadsController(ISquadsRepository repository)
+        {
+            _repository = repository;
+        }
 
         [HttpGet]
         public async Task<IEnumerable<SquadDto>> GetSquads()

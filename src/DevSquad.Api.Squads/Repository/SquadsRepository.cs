@@ -3,15 +3,14 @@ using MongoDB.Driver;
 
 namespace DevSquad.Api.Squads.Repository
 {
-    public class SquadsRepository
+    public class SquadsRepository : ISquadsRepository
     {
         public const string colletionName = "squads";
         private readonly IMongoCollection<SquadEntity> _squads;
         private readonly FilterDefinitionBuilder<SquadEntity> _filterBuilder = Builders<SquadEntity>.Filter;
 
-        public SquadsRepository(IMongoClient mongoClient)
+        public SquadsRepository(IMongoDatabase database)
         {
-            var database = mongoClient.GetDatabase("devsquad");
             _squads = database.GetCollection<SquadEntity>(colletionName);
         }
 
