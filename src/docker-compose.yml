@@ -1,0 +1,26 @@
+# docker run -d --rm --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo
+version: '3.4'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodbdata:/data/db
+
+  DevSquad.Api.Squads:
+    image: ${DOCKER_REGISTRY-}devsquadapisquads
+    container_name: DevSquad.Api.Squads
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDbSettings__Host=mongo
+    ports:
+      - 5000:80
+    build:
+      context: .
+      dockerfile: DevSquad.Api.Squads/Dockerfile
+
+volumes:
+  mongodbdata:
