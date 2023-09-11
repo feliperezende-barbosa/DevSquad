@@ -1,4 +1,5 @@
 .vscode
+.vs
 src/DevSquad.Api.Squads/bin
 src/DevSquad.Api.Squads/obj
 src/DevSquad.Api.Squads/.vs
