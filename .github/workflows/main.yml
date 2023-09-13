@@ -21,5 +21,5 @@ jobs:
             username: ${{ secrets.REGISTRY_USERNAME }}
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
-            docker build . -t /src/DevSquad.Api.Squads/${{ secrets.REGISTRY_LOGIN_SERVER }}/devsquad.api:latest
+            docker build -f ./src/DevSquad.Api.Squads/ -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devsquad.api:latest
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devsquad.api:latest
