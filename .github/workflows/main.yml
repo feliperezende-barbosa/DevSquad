@@ -1,5 +1,5 @@
 on: [push]
-name: Linux_Container_Workflow
+name: Pushing_an_image_to_ACR
 
 jobs:
     build-and-deploy:
@@ -22,4 +22,3 @@ jobs:
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
             docker build -f ./src/DevSquad.Api.Squads/ -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/devsquad.api:latest
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/devsquad.api:latest
